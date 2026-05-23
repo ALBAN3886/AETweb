@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Dev 30 Jours</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Epilogue:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050508;
+  --s1: #0d0d14;
+  --s2: #14141f;
+  --border: #1e1e2e;
+  --text: #ddddf0;
+  --muted: #5a5a7a;
+  --html: #ff6b35;
+  --css: #4ecdc4;
+  --js: #ffe66d;
+  --final: #c77dff;
+  --accent: #ff6b35;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Epilogue', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* NOISE TEXTURE */
+body::after {
+  content:'';position:fixed;inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.4;
+}
+
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px;position:relative;z-index:1;}
+
+/* HERO */
+header{padding:64px 0 48px;position:relative;}
+
+.eyebrow {
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--border);padding:5px 14px;border-radius:100px;
+  margin-bottom:28px;
+}
+.eyebrow span{width:6px;height:6px;border-radius:50%;background:var(--html);display:inline-block;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+h1{
+  font-size:clamp(2.8rem,7vw,5.5rem);
+  font-weight:900;line-height:.92;letter-spacing:-.04em;
+  margin-bottom:20px;
+}
+h1 em{font-style:normal;}
+h1 .t-html{color:var(--html);}
+h1 .t-css{color:var(--css);}
+h1 .t-js{color:var(--js);}
+
+.hero-sub{
+  font-family:'DM Mono',monospace;font-size:13px;color:var(--muted);
+  max-width:520px;line-height:1.7;
+}
+
+/* STAT ROW */
+.stats{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);border-radius:6px;
+  overflow:hidden;margin:36px 0;
+}
+.stat{
+  background:var(--s1);padding:18px 16px;text-align:center;
+  transition:background .2s;
+}
+.stat:hover{background:var(--s2);}
+.stat-n{
+  font-size:1.9rem;font-weight:900;line-height:1;
+  font-family:'DM Mono',monospace;
+}
+.stat-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:3px;}
+
+/* PROGRESS */
+.prog-wrap{
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:6px;padding:20px 24px;margin-bottom:32px;
+}
+.prog-label{
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px;
+}
+.prog-label strong{color:var(--html);font-size:14px;}
+.track{height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.fill{
+  height:100%;border-radius:2px;width:0%;
+  background:linear-gradient(90deg,var(--html),var(--css),var(--js),var(--final));
+  transition:width .5s ease;
+}
+
+/* TABS */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px;}
+.tab{
+  padding:9px 20px;border-radius:4px;border:1px solid var(--border);
+  background:var(--s1);color:var(--muted);
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.06em;
+  cursor:pointer;transition:all .2s;text-transform:uppercase;
+}
+.tab:hover{border-color:var(--html);color:var(--html);}
+.tab[data-w="1"].on{background:var(--html);border-color:var(--html);color:#000;font-weight:500;}
+.tab[data-w="2"].on{background:var(--css);border-color:var(--css);color:#000;font-weight:500;}
+.tab[data-w="3"].on{background:var(--js);border-color:var(--js);color:#000;font-weight:500;}
+.tab[data-w="4"].on{background:var(--final);border-color:var(--final);color:#000;font-weight:500;}
+
+/* WEEK */
+.wk{display:none;animation:fadeUp .3s ease;}
+.wk.on{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+.wk-hd{
+  display:flex;align-items:center;gap:20px;
+  padding:22px 26px;border-radius:6px;border-left:3px solid;
+  margin-bottom:20px;
+}
+.wk[data-w="1"] .wk-hd{background:rgba(255,107,53,.06);border-color:var(--html);}
+.wk[data-w="2"] .wk-hd{background:rgba(78,205,196,.06);border-color:var(--css);}
+.wk[data-w="3"] .wk-hd{background:rgba(255,230,109,.06);border-color:var(--js);}
+.wk[data-w="4"] .wk-hd{background:rgba(199,125,255,.06);border-color:var(--final);}
+
+.wk-n{font-size:2.8rem;font-weight:900;opacity:.12;line-height:1;font-family:'DM Mono',monospace;}
+.wk-info h2{font-size:1.2rem;font-weight:800;}
+.wk-info p{font-size:12px;color:var(--muted);margin-top:2px;font-family:'DM Mono',monospace;}
+.wk-badge{
+  margin-left:auto;font-family:'DM Mono',monospace;
+  font-size:10px;padding:4px 12px;border-radius:100px;font-weight:500;
+}
+.wk[data-w="1"] .wk-badge{background:rgba(255,107,53,.15);color:var(--html);}
+.wk[data-w="2"] .wk-badge{background:rgba(78,205,196,.15);color:var(--css);}
+.wk[data-w="3"] .wk-badge{background:rgba(255,230,109,.15);color:var(--js);}
+.wk[data-w="4"] .wk-badge{background:rgba(199,125,255,.15);color:var(--final);}
+
+/* DAY CARDS */
+.days{display:flex;flex-direction:column;gap:6px;margin-bottom:20px;}
+
+.dc{
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:6px;overflow:hidden;transition:border-color .2s;
+}
+.dc:hover{border-color:rgba(255,107,53,.25);}
+
+.dc-hd{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 18px;cursor:pointer;user-select:none;
+}
+
+.chk{
+  width:18px;height:18px;flex-shrink:0;
+  border:1px solid var(--border);border-radius:3px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;cursor:pointer;transition:all .15s;color:transparent;
+}
+.chk.done{background:var(--css);border-color:var(--css);color:#000;}
+
+.dnum{
+  font-family:'DM Mono',monospace;font-size:10px;
+  color:var(--muted);min-width:38px;letter-spacing:.05em;
+}
+
+.dtitle{font-size:13px;font-weight:600;flex:1;}
+
+.dtags{display:flex;gap:5px;align-items:center;}
+.dtag{
+  font-size:9px;font-family:'DM Mono',monospace;
+  padding:2px 8px;border-radius:100px;text-transform:uppercase;letter-spacing:.06em;
+}
+.dtag.html{background:rgba(255,107,53,.15);color:var(--html);}
+.dtag.css{background:rgba(78,205,196,.15);color:var(--css);}
+.dtag.js{background:rgba(255,230,109,.15);color:var(--js);}
+.dtag.proj{background:rgba(199,125,255,.15);color:var(--final);}
+.dtag.rev{background:rgba(255,255,255,.07);color:var(--muted);}
+
+.chev{color:var(--muted);font-size:10px;transition:transform .2s;flex-shrink:0;}
+.dc.open .chev{transform:rotate(180deg);}
+
+.dc-bd{
+  display:none;padding:0 18px 18px;
+  border-top:1px solid var(--border);
+}
+.dc.open .dc-bd{display:block;}
+
+.sec{
+  font-family:'DM Mono',monospace;font-size:9px;
+  text-transform:uppercase;letter-spacing:.15em;color:var(--muted);
+  margin:16px 0 8px;
+}
+
+.obj{list-style:none;}
+.obj li{
+  padding:5px 0;font-size:12px;color:#b8b8cc;
+  display:flex;gap:9px;align-items:flex-start;
+  border-bottom:1px solid rgba(255,255,255,.03);
+}
+.obj li:last-child{border:none;}
+.obj li::before{content:'›';color:var(--html);font-family:'DM Mono',monospace;flex-shrink:0;}
+
+.res{list-style:none;}
+.res li{margin-bottom:5px;}
+.res li a{
+  color:var(--css);font-size:11px;font-family:'DM Mono',monospace;
+  text-decoration:none;display:flex;align-items:center;gap:7px;
+  padding:6px 10px;background:rgba(78,205,196,.05);
+  border:1px solid rgba(78,205,196,.1);border-radius:4px;
+  transition:all .15s;
+}
+.res li a:hover{background:rgba(78,205,196,.12);border-color:rgba(78,205,196,.3);color:#fff;}
+.res li a::before{content:'↗';opacity:.5;}
+
+.timer{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:10px;
+}
+
+/* PROJECT CARD */
+.proj-card{
+  border-radius:6px;padding:22px 24px;border:1px solid;
+  margin-top:20px;position:relative;overflow:hidden;
+}
+.proj-card::after{
+  content:'// MINI-PROJET';position:absolute;
+  right:20px;top:16px;font-family:'DM Mono',monospace;
+  font-size:9px;letter-spacing:.15em;opacity:.2;
+}
+.wk[data-w="1"] .proj-card{background:rgba(255,107,53,.04);border-color:rgba(255,107,53,.2);}
+.wk[data-w="2"] .proj-card{background:rgba(78,205,196,.04);border-color:rgba(78,205,196,.2);}
+.wk[data-w="3"] .proj-card{background:rgba(255,230,109,.04);border-color:rgba(255,230,109,.2);}
+.wk[data-w="4"] .proj-card{background:rgba(199,125,255,.04);border-color:rgba(199,125,255,.2);}
+
+.proj-title{
+  font-size:.95rem;font-weight:800;margin-bottom:8px;
+  display:flex;align-items:center;gap:10px;
+}
+.proj-icon{font-size:1.3rem;}
+.proj-desc{font-size:12px;color:#9898b8;line-height:1.7;}
+.proj-steps{list-style:none;margin-top:10px;counter-reset:step;}
+.proj-steps li{
+  font-size:11px;color:#8080a0;padding:4px 0;
+  display:flex;gap:8px;
+}
+.proj-steps li::before{
+  content:counter(step);counter-increment:step;
+  background:rgba(255,255,255,.07);color:var(--text);
+  width:17px;height:17px;border-radius:3px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-family:'DM Mono',monospace;flex-shrink:0;
+}
+
+.dc.done-card .dtitle{opacity:.4;text-decoration:line-through;}
+
+footer{
+  text-align:center;padding:36px 0;
+  border-top:1px solid var(--border);
+  font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);
+  letter-spacing:.05em;
+}
+
+@media(max-width:600px){
+  .stats{grid-template-columns:repeat(3,1fr);}
+  .wk-badge{display:none;}
+  .dtags{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow"><span></span>Plan d'apprentissage gratuit — 30 jours</div>
+  <h1>
+    <em class="t-html">HTML</em> · <em class="t-css">CSS</em><br>
+    · <em class="t-js">JavaScript</em>
+  </h1>
+  <p class="hero-sub">// De zéro à développeur web junior — 100% ressources gratuites — ~1h par jour</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="stat-n" style="color:var(--html)">30</div><div class="stat-l">Jours</div></div>
+  <div class="stat"><div class="stat-n" style="color:var(--css)">4</div><div class="stat-l">Semaines</div></div>
+  <div class="stat"><div class="stat-n" style="color:var(--js)">4</div><div class="stat-l">Projets</div></div>
+  <div class="stat"><div class="stat-n" style="color:var(--final)">1h</div><div class="stat-l">/ jour</div></div>
+  <div class="stat"><div class="stat-n" id="done-count" style="color:var(--html)">0</div><div class="stat-l">Complétés</div></div>
+</div>
+
+<div class="prog-wrap">
+  <div class="prog-label"><span>// Progression globale</span><strong id="pct">0%</strong></div>
+  <div class="track"><div class="fill" id="fill"></div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-w="1" onclick="show(1)">S1 — HTML</button>
+  <button class="tab" data-w="2" onclick="show(2)">S2 — CSS</button>
+  <button class="tab" data-w="3" onclick="show(3)">S3 — JavaScript</button>
+  <button class="tab" data-w="4" onclick="show(4)">S4 — Projet Final</button>
+</div>
+
+<!-- ═══════════════ SEMAINE 1 ═══════════════ -->
+<div class="wk on" data-w="1">
+  <div class="wk-hd">
+    <div class="wk-n">01</div>
+    <div class="wk-info">
+      <h2>HTML — La structure du web</h2>
+      <p>Balises, formulaires, sémantique, accessibilité</p>
+    </div>
+    <div class="wk-badge">JOURS 1–7</div>
+  </div>
+
+  <div class="days">
+
+    <div class="dc" id="d1">
+      <div class="dc-hd" onclick="tog('d1')">
+        <div class="chk" id="c1" onclick="ck(event,'1')"></div>
+        <div class="dnum">J·01</div>
+        <div class="dtitle">C'est quoi le Web ? Installer ses outils</div>
+        <div class="dtags"><span class="dtag html">HTML</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Comprendre client / serveur / navigateur / HTTP</li>
+          <li>Installer VS Code + extension Live Server</li>
+          <li>Créer son premier fichier <code>index.html</code> et l'ouvrir dans Chrome</li>
+          <li>Comprendre la structure de base : <code>DOCTYPE, html, head, body</code></li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://www.youtube.com/watch?v=qz0aGYrrlhU" target="_blank">YouTube — HTML Full Course (freeCodeCamp, 2h)</a></li>
+          <li><a href="https://developer.mozilla.org/fr/docs/Learn/Getting_started_with_the_web" target="_blank">MDN Web Docs — Débuter avec le Web (FR)</a></li>
+          <li><a href="https://code.visualstudio.com/" target="_blank">VS Code — Téléchargement gratuit</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Installation + premier fichier HTML</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d2">
+      <div class="dc-hd" onclick="tog('d2')">
+        <div class="chk" id="c2" onclick="ck(event,'2')"></div>
+        <div class="dnum">J·02</div>
+        <div class="dtitle">Balises de texte & listes</div>
+        <div class="dtags"><span class="dtag html">HTML</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Titres <code>h1–h6</code>, paragraphe <code>p</code>, emphase <code>strong, em</code></li>
+          <li>Listes ordonnées <code>ol</code> et non ordonnées <code>ul / li</code></li>
+          <li>Saut de ligne <code>br</code> et ligne horizontale <code>hr</code></li>
+          <li>Commentaires HTML <code>&lt;!-- texte --&gt;</code></li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://www.w3schools.com/html/html_headings.asp" target="_blank">W3Schools — HTML Text Elements</a></li>
+          <li><a href="https://developer.mozilla.org/fr/docs/Web/HTML/Element" target="_blank">MDN — Référence des éléments HTML</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Page de présentation personnelle en texte</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d3">
+      <div class="dc-hd" onclick="tog('d3')">
+        <div class="chk" id="c3" onclick="ck(event,'3')"></div>
+        <div class="dnum">J·03</div>
+        <div class="dtitle">Liens & images</div>
+        <div class="dtags"><span class="dtag html">HTML</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Balise <code>&lt;a href=""&gt;</code> — liens internes, externes, ancres</li>
+          <li>Balise <code>&lt;img src="" alt=""&gt;</code> — chemin relatif vs absolu</li>
+          <li>Attribut <code>target="_blank"</code> pour ouvrir dans un nouvel onglet</li>
+          <li>Images cliquables : lien autour d'une image</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://www.w3schools.com/html/html_links.asp" target="_blank">W3Schools — HTML Links</a></li>
+          <li><a href="https://unsplash.com/" target="_blank">Unsplash — Images gratuites pour pratiquer</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Galerie photo HTML simple</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d4">
+      <div class="dc-hd" onclick="tog('d4')">
+        <div class="chk" id="c4" onclick="ck(event,'4')"></div>
+        <div class="dnum">J·04</div>
+        <div class="dtitle">Tableaux HTML</div>
+        <div class="dtags"><span class="dtag html">HTML</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Structure <code>table, thead, tbody, tr, th, td</code></li>
+          <li>Fusionner des cellules : <code>colspan</code> et <code>rowspan</code></li>
+          <li>Attribut <code>caption</code> pour décrire le tableau</li>
+          <li>Quand utiliser (et ne PAS utiliser) les tableaux</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://www.w3schools.com/html/html_tables.asp" target="_blank">W3Schools — HTML Tables</a></li>
+          <li><a href="https://developer.mozilla.org/fr/docs/Web/HTML/Element/table" target="_blank">MDN — L'élément table</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Tableau de planning hebdomadaire</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d5">
+      <div class="dc-hd" onclick="tog('d5')">
+        <div class="chk" id="c5" onclick="ck(event,'5')"></div>
+        <div class="dnum">J·05</div>
+        <div class="dtitle">Formulaires HTML</div>
+        <div class="dtags"><span class="dtag html">HTML</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Balise <code>&lt;form&gt;</code> avec <code>action</code> et <code>method</code></li>
+          <li>Inputs : <code>text, email, password, number, date, checkbox, radio</code></li>
+          <li>Balises <code>label, select, textarea, button</code></li>
+          <li>Attributs de validation : <code>required, minlength, pattern</code></li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://www.w3schools.com/html/html_forms.asp" target="_blank">W3Schools — HTML Forms</a></li>
+          <li><a href="https://developer.mozilla.org/fr/docs/Learn/Forms" target="_blank">MDN — Formulaires Web (FR)</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Formulaire de contact complet</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d6">
+      <div class="dc-hd" onclick="tog('d6')">
+        <div class="chk" id="c6" onclick="ck(event,'6')"></div>
+        <div class="dnum">J·06</div>
+        <div class="dtitle">HTML sémantique</div>
+        <div class="dtags"><span class="dtag html">HTML</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Balises sémantiques : <code>header, nav, main, section, article, aside, footer</code></li>
+          <li>Comprendre pourquoi la sémantique est cruciale (SEO, accessibilité)</li>
+          <li>Balises <code>figure, figcaption, time, address</code></li>
+          <li>Restructurer une page <code>div</code>-spaghetti en HTML sémantique</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://web.dev/learn/html/semantic-html/" target="_blank">web.dev — Semantic HTML (Google)</a></li>
+          <li><a href="https://www.youtube.com/watch?v=kGW8Al_cga4" target="_blank">YouTube — HTML Semantics explained</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Réécrire une page en HTML sémantique</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d7">
+      <div class="dc-hd" onclick="tog('d7')">
+        <div class="chk" id="c7" onclick="ck(event,'7')"></div>
+        <div class="dnum">J·07</div>
+        <div class="dtitle">RÉVISION + Mini-projet S1</div>
+        <div class="dtags"><span class="dtag proj">Projet</span><span class="dtag rev">Révision</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Relire les notions J1–J6 et corriger ses lacunes</li>
+          <li>Valider son HTML sur validator.w3.org</li>
+          <li>Réaliser le mini-projet de la semaine</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://validator.w3.org/" target="_blank">W3C Validator — Valider son HTML</a></li>
+          <li><a href="https://www.frontendmentor.io/challenges?difficulties=1" target="_blank">Frontend Mentor — Défis HTML débutant</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h30 — Révision + projet</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="proj-card">
+    <div class="proj-title"><span class="proj-icon">🪪</span> Projet S1 — Page CV personnel en HTML pur</div>
+    <div class="proj-desc">Crée une page CV complète en HTML uniquement (sans CSS). Elle doit présenter ton identité, tes compétences, ton parcours et un formulaire de contact. Structure sémantique obligatoire.</div>
+    <ul class="proj-steps">
+      <li>Header avec nom, titre et photo (balise <code>header + img</code>)</li>
+      <li>Section "À propos" avec <code>section + p</code></li>
+      <li>Section "Compétences" avec liste <code>ul</code></li>
+      <li>Section "Expériences" avec tableau <code>table</code> (poste, entreprise, durée)</li>
+      <li>Formulaire de contact avec <code>input email, textarea, button</code></li>
+      <li>Footer avec liens vers réseaux sociaux (<code>a + footer</code>)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══════════════ SEMAINE 2 ═══════════════ -->
+<div class="wk" data-w="2">
+  <div class="wk-hd">
+    <div class="wk-n">02</div>
+    <div class="wk-info">
+      <h2>CSS — Le style et la mise en page</h2>
+      <p>Sélecteurs, box model, Flexbox, Grid, responsive</p>
+    </div>
+    <div class="wk-badge">JOURS 8–14</div>
+  </div>
+
+  <div class="days">
+
+    <div class="dc" id="d8">
+      <div class="dc-hd" onclick="tog('d8')">
+        <div class="chk" id="c8" onclick="ck(event,'8')"></div>
+        <div class="dnum">J·08</div>
+        <div class="dtitle">CSS — Introduction & sélecteurs</div>
+        <div class="dtags"><span class="dtag css">CSS</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Lier une feuille CSS : <code>&lt;link rel="stylesheet"&gt;</code></li>
+          <li>Sélecteurs : élément, classe <code>.nom</code>, id <code>#nom</code>, descendant</li>
+          <li>Propriétés de base : <code>color, background-color, font-size, font-family</code></li>
+          <li>Cascades et spécificité — comprendre qui gagne</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://www.youtube.com/watch?v=1Rs2ND1ryYc" target="_blank">YouTube — CSS Full Course (freeCodeCamp)</a></li>
+          <li><a href="https://www.w3schools.com/css/css_selectors.asp" target="_blank">W3Schools — CSS Selectors</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Styliser le CV du projet S1</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d9">
+      <div class="dc-hd" onclick="tog('d9')">
+        <div class="chk" id="c9" onclick="ck(event,'9')"></div>
+        <div class="dnum">J·09</div>
+        <div class="dtitle">Box Model — margin, padding, border</div>
+        <div class="dtags"><span class="dtag css">CSS</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Comprendre le modèle de boîte : content → padding → border → margin</li>
+          <li><code>box-sizing: border-box</code> — pourquoi c'est essentiel</li>
+          <li><code>width, height, max-width, min-height</code></li>
+          <li>Utiliser les DevTools Chrome pour inspecter le box model</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://developer.mozilla.org/fr/docs/Web/CSS/CSS_box_model/Introduction_to_the_CSS_box_model" target="_blank">MDN — Modèle de boîtes CSS (FR)</a></li>
+          <li><a href="https://web.dev/learn/css/box-model/" target="_blank">web.dev — CSS Box Model (Google)</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Cartes de produit avec espacement</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d10">
+      <div class="dc-hd" onclick="tog('d10')">
+        <div class="chk" id="c10" onclick="ck(event,'10')"></div>
+        <div class="dnum">J·10</div>
+        <div class="dtitle">Typographie & couleurs CSS</div>
+        <div class="dtags"><span class="dtag css">CSS</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Importer une police Google Fonts dans son CSS</li>
+          <li>Propriétés : <code>font-weight, line-height, letter-spacing, text-align</code></li>
+          <li>Couleurs : hex, rgb, rgba, hsl — et les variables CSS <code>--ma-couleur</code></li>
+          <li>Créer une palette cohérente avec coolors.co</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://fonts.google.com/" target="_blank">Google Fonts — Polices gratuites</a></li>
+          <li><a href="https://coolors.co/" target="_blank">Coolors — Générateur de palettes</a></li>
+          <li><a href="https://web.dev/learn/css/color/" target="_blank">web.dev — CSS Color</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Charte graphique pour le projet</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d11">
+      <div class="dc-hd" onclick="tog('d11')">
+        <div class="chk" id="c11" onclick="ck(event,'11')"></div>
+        <div class="dnum">J·11</div>
+        <div class="dtitle">Flexbox — mise en page moderne</div>
+        <div class="dtags"><span class="dtag css">CSS</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li><code>display:flex</code>, axes principal et transversal</li>
+          <li><code>justify-content, align-items, flex-wrap, gap</code></li>
+          <li>Propriétés enfant : <code>flex-grow, flex-shrink, align-self</code></li>
+          <li>Centrer un élément horizontalement ET verticalement</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://flexboxfroggy.com/#fr" target="_blank">Flexbox Froggy — Jeu pour apprendre Flexbox (FR)</a></li>
+          <li><a href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/" target="_blank">CSS-Tricks — A Complete Guide to Flexbox</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Barre de navigation + cartes en Flex</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d12">
+      <div class="dc-hd" onclick="tog('d12')">
+        <div class="chk" id="c12" onclick="ck(event,'12')"></div>
+        <div class="dnum">J·12</div>
+        <div class="dtitle">CSS Grid — layouts 2D</div>
+        <div class="dtags"><span class="dtag css">CSS</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li><code>display:grid</code>, <code>grid-template-columns/rows</code></li>
+          <li>Unité <code>fr</code>, fonction <code>repeat()</code>, <code>minmax()</code></li>
+          <li>Placer des éléments : <code>grid-column, grid-row</code></li>
+          <li>Quand utiliser Grid vs Flexbox</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://cssgridgarden.com/#fr" target="_blank">Grid Garden — Jeu pour apprendre CSS Grid (FR)</a></li>
+          <li><a href="https://css-tricks.com/snippets/css/complete-guide-grid/" target="_blank">CSS-Tricks — A Complete Guide to Grid</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Layout de galerie photo avec Grid</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d13">
+      <div class="dc-hd" onclick="tog('d13')">
+        <div class="chk" id="c13" onclick="ck(event,'13')"></div>
+        <div class="dnum">J·13</div>
+        <div class="dtitle">Responsive Design & Media Queries</div>
+        <div class="dtags"><span class="dtag css">CSS</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Meta viewport : <code>&lt;meta name="viewport"&gt;</code></li>
+          <li>Media queries : <code>@media (max-width: 768px) { ... }</code></li>
+          <li>Approche Mobile First</li>
+          <li>Unités relatives : <code>%, vw, vh, em, rem</code></li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://web.dev/learn/design/" target="_blank">web.dev — Responsive Design (Google)</a></li>
+          <li><a href="https://www.youtube.com/watch?v=bn-DQznEItM" target="_blank">YouTube — CSS Media Queries (Kevin Powell)</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Adapter le CV projet S1 en responsive</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d14">
+      <div class="dc-hd" onclick="tog('d14')">
+        <div class="chk" id="c14" onclick="ck(event,'14')"></div>
+        <div class="dnum">J·14</div>
+        <div class="dtitle">RÉVISION + Mini-projet S2</div>
+        <div class="dtags"><span class="dtag proj">Projet</span><span class="dtag rev">Révision</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Réviser Flexbox et Grid avec des exercices</li>
+          <li>Tester son responsive sur mobile (DevTools → mode responsive)</li>
+          <li>Réaliser le mini-projet de la semaine</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://www.frontendmentor.io/challenges?difficulties=1" target="_blank">Frontend Mentor — Défis CSS débutant</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h30 — Révision + projet</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="proj-card">
+    <div class="proj-title"><span class="proj-icon">🏠</span> Projet S2 — Landing page responsive</div>
+    <div class="proj-desc">Crée une landing page complète pour un produit fictif (application, café, service...) entièrement responsive. Elle doit s'afficher correctement sur mobile, tablette et desktop.</div>
+    <ul class="proj-steps">
+      <li>Navbar fixe avec logo + liens (Flexbox)</li>
+      <li>Section héro avec titre accrocheur, sous-titre et bouton CTA</li>
+      <li>Section "Fonctionnalités" : 3 cartes en Grid responsive</li>
+      <li>Section tarifs avec tableau HTML stylisé</li>
+      <li>Footer avec colonnes en Flexbox</li>
+      <li>Responsive complet : mobile 375px, tablette 768px, desktop 1200px</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══════════════ SEMAINE 3 ═══════════════ -->
+<div class="wk" data-w="3">
+  <div class="wk-hd">
+    <div class="wk-n">03</div>
+    <div class="wk-info">
+      <h2>JavaScript — L'interactivité</h2>
+      <p>DOM, événements, fetch API, logique de base</p>
+    </div>
+    <div class="wk-badge">JOURS 15–21</div>
+  </div>
+
+  <div class="days">
+
+    <div class="dc" id="d15">
+      <div class="dc-hd" onclick="tog('d15')">
+        <div class="chk" id="c15" onclick="ck(event,'15')"></div>
+        <div class="dnum">J·15</div>
+        <div class="dtitle">JavaScript — Bases du langage</div>
+        <div class="dtags"><span class="dtag js">JS</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Lier JS à une page : <code>&lt;script src="app.js"&gt;</code> en bas de body</li>
+          <li>Variables <code>let / const</code>, types, opérateurs</li>
+          <li><code>console.log()</code> — ton meilleur outil de débogage</li>
+          <li>Conditions <code>if/else</code>, opérateur ternaire</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://www.youtube.com/watch?v=PkZNo7MFNFg" target="_blank">YouTube — JavaScript for Beginners (freeCodeCamp)</a></li>
+          <li><a href="https://javascript.info/" target="_blank">javascript.info — Le meilleur guide JS gratuit</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Premiers scripts dans la console</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d16">
+      <div class="dc-hd" onclick="tog('d16')">
+        <div class="chk" id="c16" onclick="ck(event,'16')"></div>
+        <div class="dnum">J·16</div>
+        <div class="dtitle">Fonctions & tableaux JS</div>
+        <div class="dtags"><span class="dtag js">JS</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Fonctions classiques et arrow functions <code>() =&gt; {}</code></li>
+          <li>Tableaux : <code>push, pop, map, filter, forEach, find</code></li>
+          <li>Objets JS littéraux <code>{ clé: valeur }</code></li>
+          <li>Boucle <code>for...of</code> sur un tableau</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://javascript.info/function-basics" target="_blank">javascript.info — Functions</a></li>
+          <li><a href="https://www.w3schools.com/js/js_array_methods.asp" target="_blank">W3Schools — JS Array Methods</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Fonctions utilitaires de tri et filtrage</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d17">
+      <div class="dc-hd" onclick="tog('d17')">
+        <div class="chk" id="c17" onclick="ck(event,'17')"></div>
+        <div class="dnum">J·17</div>
+        <div class="dtitle">Manipulation du DOM</div>
+        <div class="dtags"><span class="dtag js">JS</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Sélectionner des éléments : <code>querySelector, querySelectorAll</code></li>
+          <li>Modifier le contenu : <code>textContent, innerHTML</code></li>
+          <li>Modifier le style : <code>element.style.color</code></li>
+          <li>Ajouter / supprimer des classes : <code>classList.add/remove/toggle</code></li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://javascript.info/document" target="_blank">javascript.info — Document (DOM)</a></li>
+          <li><a href="https://www.youtube.com/watch?v=y17RuWkWdn8" target="_blank">YouTube — DOM Manipulation (Traversy Media)</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Modifier une page HTML via JS</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d18">
+      <div class="dc-hd" onclick="tog('d18')">
+        <div class="chk" id="c18" onclick="ck(event,'18')"></div>
+        <div class="dnum">J·18</div>
+        <div class="dtitle">Événements — click, input, submit</div>
+        <div class="dtags"><span class="dtag js">JS</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li><code>addEventListener("click", function)</code></li>
+          <li>Événements <code>input, change, submit, keydown</code></li>
+          <li>L'objet <code>event</code> et <code>event.preventDefault()</code></li>
+          <li>Délégation d'événements sur des listes dynamiques</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://javascript.info/events" target="_blank">javascript.info — Introduction to Events</a></li>
+          <li><a href="https://www.w3schools.com/js/js_events.asp" target="_blank">W3Schools — JavaScript Events</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Formulaire interactif avec validation JS</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d19">
+      <div class="dc-hd" onclick="tog('d19')">
+        <div class="chk" id="c19" onclick="ck(event,'19')"></div>
+        <div class="dnum">J·19</div>
+        <div class="dtitle">LocalStorage & persistance des données</div>
+        <div class="dtags"><span class="dtag js">JS</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li><code>localStorage.setItem / getItem / removeItem</code></li>
+          <li>Sauvegarder et récupérer des objets avec <code>JSON.stringify/parse</code></li>
+          <li>Charger les données sauvegardées au chargement de la page</li>
+          <li>Comprendre les limites de localStorage (~5MB, même domaine)</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://developer.mozilla.org/fr/docs/Web/API/Window/localStorage" target="_blank">MDN — localStorage (FR)</a></li>
+          <li><a href="https://www.youtube.com/watch?v=k8yJCeuP6I8" target="_blank">YouTube — LocalStorage (Florin Pop)</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — To-do list avec sauvegarde</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d20">
+      <div class="dc-hd" onclick="tog('d20')">
+        <div class="chk" id="c20" onclick="ck(event,'20')"></div>
+        <div class="dnum">J·20</div>
+        <div class="dtitle">Fetch API & données JSON</div>
+        <div class="dtags"><span class="dtag js">JS</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Comprendre async / await et les Promises</li>
+          <li><code>fetch(url).then(res =&gt; res.json()).then(data =&gt; ...)</code></li>
+          <li>Gérer les erreurs avec <code>try/catch</code></li>
+          <li>Afficher des données d'une API publique dans le HTML</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://javascript.info/fetch" target="_blank">javascript.info — Fetch API</a></li>
+          <li><a href="https://jsonplaceholder.typicode.com/" target="_blank">JSONPlaceholder — Fausse API REST gratuite</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Afficher des données d'une API</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d21">
+      <div class="dc-hd" onclick="tog('d21')">
+        <div class="chk" id="c21" onclick="ck(event,'21')"></div>
+        <div class="dnum">J·21</div>
+        <div class="dtitle">RÉVISION + Mini-projet S3</div>
+        <div class="dtags"><span class="dtag proj">Projet</span><span class="dtag rev">Révision</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Réviser DOM, événements, localStorage, fetch</li>
+          <li>Déboguer avec les DevTools (onglet Console et Sources)</li>
+          <li>Réaliser le mini-projet de la semaine</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://www.jshint.com/" target="_blank">JSHint — Vérifier la qualité de son JS</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h30 — Révision + projet</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="proj-card">
+    <div class="proj-title"><span class="proj-icon">✅</span> Projet S3 — Application To-Do List complète</div>
+    <div class="proj-desc">Crée une application de gestion de tâches en HTML + CSS + JS pur. Les tâches sont sauvegardées dans localStorage et persistent après rechargement. Design soigné obligatoire.</div>
+    <ul class="proj-steps">
+      <li>Ajouter une tâche via un input + bouton (event submit)</li>
+      <li>Afficher les tâches dans une liste générée dynamiquement (DOM)</li>
+      <li>Cocher/décocher une tâche (toggle classe + style barré)</li>
+      <li>Supprimer une tâche avec un bouton ✕ (délégation d'événements)</li>
+      <li>Sauvegarder toutes les tâches dans localStorage (JSON)</li>
+      <li>Bonus : filtrer les tâches (Toutes / Actives / Terminées)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══════════════ SEMAINE 4 ═══════════════ -->
+<div class="wk" data-w="4">
+  <div class="wk-hd">
+    <div class="wk-n">04</div>
+    <div class="wk-info">
+      <h2>Git, déploiement & projet final</h2>
+      <p>Git/GitHub, GitHub Pages, bonnes pratiques, portfolio</p>
+    </div>
+    <div class="wk-badge">JOURS 22–30</div>
+  </div>
+
+  <div class="days">
+
+    <div class="dc" id="d22">
+      <div class="dc-hd" onclick="tog('d22')">
+        <div class="chk" id="c22" onclick="ck(event,'22')"></div>
+        <div class="dnum">J·22</div>
+        <div class="dtitle">Git — Contrôle de version</div>
+        <div class="dtags"><span class="dtag rev">Outils</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Installer Git et configurer <code>git config --global</code></li>
+          <li>Commandes essentielles : <code>init, add, commit, status, log</code></li>
+          <li>Créer un dépôt sur GitHub et faire son premier <code>push</code></li>
+          <li>Comprendre branches : <code>branch, checkout, merge</code></li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://www.youtube.com/watch?v=RGOj5yH7evk" target="_blank">YouTube — Git & GitHub Crash Course (freeCodeCamp)</a></li>
+          <li><a href="https://learngitbranching.js.org/?locale=fr_FR" target="_blank">Learn Git Branching — Jeu interactif (FR)</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Versionner ses projets S1-S3</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d23">
+      <div class="dc-hd" onclick="tog('d23')">
+        <div class="chk" id="c23" onclick="ck(event,'23')"></div>
+        <div class="dnum">J·23</div>
+        <div class="dtitle">Déployer avec GitHub Pages</div>
+        <div class="dtags"><span class="dtag rev">Outils</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Activer GitHub Pages sur un dépôt existant</li>
+          <li>Comprendre l'URL générée <code>username.github.io/repo</code></li>
+          <li>Mettre à jour son site en ligne avec <code>git push</code></li>
+          <li>Ajouter un nom de domaine personnalisé (optionnel, gratuit avec Freenom)</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://pages.github.com/" target="_blank">GitHub Pages — Documentation officielle</a></li>
+          <li><a href="https://www.netlify.com/" target="_blank">Netlify — Alternative de déploiement gratuit</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Mettre la landing page S2 en ligne</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d24">
+      <div class="dc-hd" onclick="tog('d24')">
+        <div class="chk" id="c24" onclick="ck(event,'24')"></div>
+        <div class="dnum">J·24</div>
+        <div class="dtitle">CSS Animations & transitions</div>
+        <div class="dtags"><span class="dtag css">CSS</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Transitions : <code>transition: all 0.3s ease</code> sur hover</li>
+          <li>Animations CSS avec <code>@keyframes</code></li>
+          <li>Propriétés : <code>animation-duration, delay, iteration-count</code></li>
+          <li>Transform : <code>translate, scale, rotate</code></li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://animista.net/" target="_blank">Animista — Générateur d'animations CSS</a></li>
+          <li><a href="https://web.dev/learn/css/animations/" target="_blank">web.dev — CSS Animations</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Enrichir la landing page d'animations</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d25">
+      <div class="dc-hd" onclick="tog('d25')">
+        <div class="chk" id="c25" onclick="ck(event,'25')"></div>
+        <div class="dnum">J·25</div>
+        <div class="dtitle">Accessibilité & SEO de base</div>
+        <div class="dtags"><span class="dtag rev">Bonnes pratiques</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Attributs ARIA essentiels : <code>aria-label, aria-hidden, role</code></li>
+          <li>Contraste des couleurs (outil WebAIM Contrast Checker)</li>
+          <li>Balises meta SEO : <code>title, description, og:image</code></li>
+          <li>Auditer sa page avec Lighthouse dans Chrome DevTools</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://webaim.org/resources/contrastchecker/" target="_blank">WebAIM — Contrast Checker gratuit</a></li>
+          <li><a href="https://web.dev/learn/accessibility/" target="_blank">web.dev — Learn Accessibility (Google)</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Score Lighthouse > 90</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d26">
+      <div class="dc-hd" onclick="tog('d26')">
+        <div class="chk" id="c26" onclick="ck(event,'26')"></div>
+        <div class="dnum">J·26</div>
+        <div class="dtitle">Intro aux frameworks CSS (Tailwind)</div>
+        <div class="dtags"><span class="dtag css">CSS</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Comprendre ce qu'est un framework CSS utilitaire</li>
+          <li>Installer Tailwind via CDN pour tester</li>
+          <li>Classes utilitaires : flex, grid, padding, couleurs, responsive</li>
+          <li>Refaire un composant du projet S2 avec Tailwind</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://tailwindcss.com/docs/installation/play-cdn" target="_blank">Tailwind CSS — Play CDN (sans installation)</a></li>
+          <li><a href="https://www.youtube.com/watch?v=lCxcTsOHrjo" target="_blank">YouTube — Tailwind CSS Crash Course (Traversy)</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Premier composant Tailwind</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d27">
+      <div class="dc-hd" onclick="tog('d27')">
+        <div class="chk" id="c27" onclick="ck(event,'27')"></div>
+        <div class="dnum">J·27</div>
+        <div class="dtitle">Projet final — Conception & structure</div>
+        <div class="dtags"><span class="dtag proj">Projet</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Définir le sujet : portfolio, blog, app météo, catalogue...</li>
+          <li>Créer le wireframe sur papier ou Excalidraw</li>
+          <li>Créer la structure HTML complète et sémantique</li>
+          <li>Commencer le CSS : variables, reset, typographie</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://excalidraw.com/" target="_blank">Excalidraw — Wireframing gratuit en ligne</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h — Structure + design de base</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d28">
+      <div class="dc-hd" onclick="tog('d28')">
+        <div class="chk" id="c28" onclick="ck(event,'28')"></div>
+        <div class="dnum">J·28</div>
+        <div class="dtitle">Projet final — Mise en page & style</div>
+        <div class="dtags"><span class="dtag proj">Projet</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Implémenter toutes les sections avec Flexbox/Grid</li>
+          <li>Responsive Mobile First avec media queries</li>
+          <li>Ajouter les transitions et animations CSS</li>
+          <li>Tester sur vrai smartphone (ou DevTools)</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://www.responsivedesignchecker.com/" target="_blank">Responsive Design Checker — Tester son site</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h30 — Mise en page complète</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d29">
+      <div class="dc-hd" onclick="tog('d29')">
+        <div class="chk" id="c29" onclick="ck(event,'29')"></div>
+        <div class="dnum">J·29</div>
+        <div class="dtitle">Projet final — JavaScript & interactivité</div>
+        <div class="dtags"><span class="dtag proj">Projet</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Ajouter les interactions JS (menu mobile, filtres, formulaire...)</li>
+          <li>Intégrer une API si pertinent (météo, citation, etc.)</li>
+          <li>Vérifier la console — zéro erreur JS</li>
+          <li>Optimiser les images (TinyPNG) et tester Lighthouse</li>
+        </ul>
+        <div class="sec">// Ressources gratuites</div>
+        <ul class="res">
+          <li><a href="https://tinypng.com/" target="_blank">TinyPNG — Compresser ses images gratuitement</a></li>
+        </ul>
+        <div class="timer">⏱ ~1h30 — Finalisation JS</div>
+      </div>
+    </div>
+
+    <div class="dc" id="d30">
+      <div class="dc-hd" onclick="tog('d30')">
+        <div class="chk" id="c30" onclick="ck(event,'30')"></div>
+        <div class="dnum">J·30</div>
+        <div class="dtitle">🚀 Déploiement & Et après ?</div>
+        <div class="dtags"><span class="dtag rev">Bilan</span></div>
+        <span class="chev">▼</span>
+      </div>
+      <div class="dc-bd">
+        <div class="sec">// Objectifs</div>
+        <ul class="obj">
+          <li>Déployer le projet final sur GitHub Pages ou Netlify</li>
+          <li>Écrire un README.md complet avec captures d'écran</li>
+          <li>Partager le lien en ligne (LinkedIn, communautés dev)</li>
+          <li>Choisir la suite : React, Node.js, Django, ou freelance</li>
+        </ul>
+        <div class="sec">// Pour continuer gratuitement</div>
+        <ul class="res">
+          <li><a href="https://roadmap.sh/frontend" target="_blank">roadmap.sh — Frontend Developer Roadmap</a></li>
+          <li><a href="https://www.freecodecamp.org/learn" target="_blank">freeCodeCamp — Certifications gratuites complètes</a></li>
+          <li><a href="https://theodinproject.com/" target="_blank">The Odin Project — Curriculum complet fullstack gratuit</a></li>
+        </ul>
+        <div class="timer">⏱ ~2h — Déploiement + bilan + partage</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="proj-card">
+    <div class="proj-title"><span class="proj-icon">💼</span> Projet S4 — Portfolio développeur web</div>
+    <div class="proj-desc">Crée ton portfolio personnel de développeur web. C'est la pièce maîtresse de ta candidature pour des missions ou un emploi. Il doit être en ligne, responsive et représenter tout ce que tu as appris.</div>
+    <ul class="proj-steps">
+      <li>Section Héro : nom, titre, photo, bouton "Voir mes projets"</li>
+      <li>Section "À propos" avec skills visuels (barres ou badges)</li>
+      <li>Section "Projets" : cartes pour les 3 projets S1–S3 avec liens live + GitHub</li>
+      <li>Section "Contact" : formulaire fonctionnel + liens réseaux sociaux</li>
+      <li>Animations CSS (entrance, hover sur les cartes projet)</li>
+      <li>Déployé sur GitHub Pages avec URL propre + score Lighthouse > 90</li>
+    </ul>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<footer>
+  <div class="wrap">
+    <div>// Web Dev 30 Jours — HTML · CSS · JavaScript — 100% gratuit</div>
+    <div style="margin-top:6px;opacity:.5;">MDN Web Docs · javascript.info · CSS-Tricks · freeCodeCamp · The Odin Project</div>
+  </div>
+</footer>
+
+<script>
+function tog(id){
+  const c=document.getElementById(id);
+  c.classList.toggle('open');
+}
+function show(n){
+  document.querySelectorAll('.wk').forEach(w=>w.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelector(`.wk[data-w="${n}"]`).classList.add('on');
+  document.querySelector(`.tab[data-w="${n}"]`).classList.add('on');
+}
+function ck(e,num){
+  e.stopPropagation();
+  const chk=document.getElementById('c'+num);
+  const card=document.getElementById('d'+num);
+  const done=chk.classList.toggle('done');
+  chk.textContent=done?'✓':'';
+  card.classList.toggle('done-card',done);
+  const s=JSON.parse(localStorage.getItem('wd30')||'{}');
+  s[num]=done;
+  localStorage.setItem('wd30',JSON.stringify(s));
+  upd();
+}
+function upd(){
+  const s=JSON.parse(localStorage.getItem('wd30')||'{}');
+  const n=Object.values(s).filter(Boolean).length;
+  document.getElementById('done-count').textContent=n;
+  const p=Math.round(n/30*100);
+  document.getElementById('fill').style.width=p+'%';
+  document.getElementById('pct').textContent=p+'%';
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  const s=JSON.parse(localStorage.getItem('wd30')||'{}');
+  for(const[num,done] of Object.entries(s)){
+    if(done){
+      const chk=document.getElementById('c'+num);
+      const card=document.getElementById('d'+num);
+      if(chk){chk.classList.add('done');chk.textContent='✓';}
+      if(card)card.classList.add('done-card');
+    }
+  }
+  upd();
+});
+</script>
+</body>
+</html>
