@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Certification — AET</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">AET</span>
+      <span class="brand-text"><b>Alban Eloh Technology</b>La technologie au service de ton avenir</span>
+    </a>
+    <nav class="site-nav" id="siteNav">
+      <a href="index.html" class="nav-link">Accueil</a>
+      <a href="formation-ia-prompting.html" class="nav-link">Formations</a>
+      <a href="programme.html" class="nav-link">Programme</a>
+      <a href="prompts.html" class="nav-link">🧠 Banque de prompts</a>
+      <a href="videos.html" class="nav-link">🎥 Vidéothèque</a>
+      <a href="quiz.html" class="nav-link">🧪 Quiz</a>
+      <a href="certification.html" class="nav-link">🏆 Certification</a>
+      <a href="dashboard.html" class="nav-link">👤 Mon espace</a>
+      <a href="parametres.html" class="nav-link">⚙️ Paramètres</a>
+      <a href="index.html#contact" class="nav-link">📞 Contact</a>
+      <div class="nav-actions">
+        <div class="theme-toggle">
+          <button type="button" data-mode="light" aria-label="Thème clair">☀️</button>
+          <button type="button" data-mode="dark" aria-label="Thème sombre">🌙</button>
+          <button type="button" data-mode="auto" aria-label="Thème automatique">⚙️</button>
+        </div>
+        <a href="formation-ia-prompting.html#inscription" class="btn btn-gold btn-sm">S'inscrire</a>
+      </div>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<section class="section">
+  <div class="wrap" style="max-width:760px;">
+    <div class="section-head">
+      <p class="kicker">🏆 Certification AET</p>
+      <h2>Conditions d'obtention</h2>
+    </div>
+
+    <div class="cert-conditions" id="conditions"></div>
+
+    <div id="certBlock"></div>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand"><b>AET — Alban Eloh Technology</b>« Apprendre aujourd'hui, réussir demain ! »</div>
+    <div class="footer-links">
+      <a href="programme.html">Programme</a>
+      <a href="dashboard.html">Mon espace</a>
+      <a href="mailto:albaneloh686@gmail.com">albaneloh686@gmail.com</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/progress.js"></script>
+<script src="js/app.js"></script>
+<script>
+  const s = AET_PROGRESS.stats();
+  const results = AET_PROGRESS.quizResults();
+  const quizOk = Object.values(results).filter(r=>r.score/r.total>=0.6).length;
+  let profile = {};
+  try{ profile = JSON.parse(localStorage.getItem('aet_profile')||'{}'); }catch(e){}
+
+  const conditions = [
+    {label:'Tous les modules terminés', met: s.done === s.total, detail: `${s.done}/${s.total}`},
+    {label:'Exercices réalisés', met: s.done === s.total, detail: `${s.done}/${s.total}`},
+    {label:'Quiz validés (≥ 60%)', met: quizOk === s.total, detail: `${quizOk}/${s.total}`},
+    {label:'Projet final réalisé (Module 23)', met: AET_PROGRESS.statusOf(23)==='done', detail: AET_PROGRESS.statusOf(23)==='done' ? 'Fait' : 'À faire'},
+    {label:'Examen final AET', met: false, detail: 'Sur rendez-vous avec un formateur AET'},
+  ];
+
+  document.getElementById('conditions').innerHTML = conditions.map(c=>`
+    <div class="cert-cond ${c.met?'met':''}">
+      <span class="ic">${c.met?'✓':'○'}</span>
+      <span style="flex:1;">${c.label}</span>
+      <span class="muted" style="font-size:12.5px;">${c.detail}</span>
+    </div>
+  `).join('');
+
+  const allMet = conditions.filter(c=>c.label!=='Examen final AET').every(c=>c.met);
+
+  const certBlock = document.getElementById('certBlock');
+  if(allMet){
+    const today = new Date().toLocaleDateString('fr-FR', {year:'numeric',month:'long',day:'numeric'});
+    const certNum = 'AET-' + new Date().getFullYear() + '-' + String(Math.abs(hashCode(profile.nom||'etudiant'))).slice(0,5);
+    certBlock.innerHTML = `
+      <div class="certificate" id="certificate">
+        <div class="cert-brand">AET — ALBAN ELOH TECHNOLOGY</div>
+        <div class="cert-title">Certificat de compétence</div>
+        <div class="cert-sub">décerné à</div>
+        <div class="cert-name">${profile.nom || 'Nom à renseigner dans Paramètres'}</div>
+        <div class="cert-formation">pour avoir complété la Formation IA & Prompting — Niveaux 1 à 4</div>
+        <div class="cert-meta">
+          <div><b>${today}</b>Date</div>
+          <div><b>${certNum}</b>N° certificat</div>
+          <div><b>AET</b>Signature</div>
+        </div>
+      </div>
+      <div class="center mt-24">
+        <button class="btn btn-gold" onclick="window.print()">Télécharger en PDF</button>
+      </div>
+      <p class="muted center mt-16" style="font-size:12px;">Le bouton utilise l'impression de ton navigateur (« Enregistrer en PDF ») — une génération PDF dédiée est prévue avec l'arrivée de Firebase.</p>
+    `;
+  } else {
+    certBlock.innerHTML = `
+      <div class="card" style="padding:30px;text-align:center;">
+        <p class="muted">Termine toutes les conditions ci-dessus pour débloquer ton certificat.</p>
+        <a class="btn btn-gold mt-16" href="programme.html">Continuer la formation</a>
+      </div>
+    `;
+  }
+
+  function hashCode(str){
+    let h = 0;
+    for(let i=0;i<str.length;i++){ h = (h<<5) - h + str.charCodeAt(i); h |= 0; }
+    return h;
+  }
+</script>
+</body>
+</html>

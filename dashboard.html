@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon espace — AET</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/courses.css">
+<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">AET</span>
+      <span class="brand-text"><b>Alban Eloh Technology</b>La technologie au service de ton avenir</span>
+    </a>
+    <nav class="site-nav" id="siteNav">
+      <a href="index.html" class="nav-link">Accueil</a>
+      <a href="formation-ia-prompting.html" class="nav-link">Formations</a>
+      <a href="programme.html" class="nav-link">Programme</a>
+      <a href="prompts.html" class="nav-link">🧠 Banque de prompts</a>
+      <a href="videos.html" class="nav-link">🎥 Vidéothèque</a>
+      <a href="quiz.html" class="nav-link">🧪 Quiz</a>
+      <a href="certification.html" class="nav-link">🏆 Certification</a>
+      <a href="dashboard.html" class="nav-link">👤 Mon espace</a>
+      <a href="parametres.html" class="nav-link">⚙️ Paramètres</a>
+      <a href="index.html#contact" class="nav-link">📞 Contact</a>
+      <div class="nav-actions">
+        <div class="theme-toggle">
+          <button type="button" data-mode="light" aria-label="Thème clair">☀️</button>
+          <button type="button" data-mode="dark" aria-label="Thème sombre">🌙</button>
+          <button type="button" data-mode="auto" aria-label="Thème automatique">⚙️</button>
+        </div>
+        <a href="formation-ia-prompting.html#inscription" class="btn btn-gold btn-sm">S'inscrire</a>
+      </div>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<section class="section">
+  <div class="wrap" style="max-width:920px;">
+
+    <div class="welcome-card">
+      <h1 id="hello">Bonjour 👋</h1>
+      <p>Voici où tu en es dans la Formation IA & Prompting.</p>
+      <div class="progress-track"><div class="progress-fill" id="dashFill" style="width:0%"></div></div>
+      <div class="welcome-row">
+        <span>Modules terminés : <b id="dashDone">0 / 23</b></span>
+        <span>Niveau actuel : <b id="dashNiveau">—</b></span>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <div>
+        <div class="next-card">
+          <p class="kicker">Prochain cours</p>
+          <h3 id="nextTitle">Formation terminée 🎉</h3>
+          <p class="muted mt-8" id="nextObj"></p>
+          <a class="btn btn-gold mt-16" id="nextBtn" href="programme.html">Continuer la formation</a>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <a class="btn btn-line btn-sm" href="quiz.html">Voir mes résultats de quiz</a>
+          <a class="btn btn-line btn-sm" href="certification.html">Voir mes certificats</a>
+        </div>
+      </div>
+      <div class="side-links">
+        <div class="dash-stats">
+          <div class="dash-stat"><b id="statDone">0</b><span>Modules terminés</span></div>
+          <div class="dash-stat"><b id="statQuiz">0</b><span>Quiz réussis (≥60%)</span></div>
+          <div class="dash-stat"><b id="statExo">0</b><span>Exercices réalisés</span></div>
+          <div class="dash-stat"><b id="statPct">0%</b><span>Progression globale</span></div>
+        </div>
+        <a class="side-link" href="programme.html">📚 Voir le programme</a>
+        <a class="side-link" href="prompts.html">🧠 Banque de prompts</a>
+        <a class="side-link" href="parametres.html">⚙️ Paramètres</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand"><b>AET — Alban Eloh Technology</b>« Apprendre aujourd'hui, réussir demain ! »</div>
+    <div class="footer-links">
+      <a href="programme.html">Programme</a>
+      <a href="certification.html">Certification</a>
+      <a href="mailto:albaneloh686@gmail.com">albaneloh686@gmail.com</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/progress.js"></script>
+<script src="js/app.js"></script>
+<script>
+  let profile = {};
+  try{ profile = JSON.parse(localStorage.getItem('aet_profile')||'{}'); }catch(e){}
+  document.getElementById('hello').textContent = 'Bonjour, ' + (profile.nom ? profile.nom.split(' ')[0] : 'à toi') + ' 👋';
+
+  const s = AET_PROGRESS.stats();
+  document.getElementById('dashFill').style.width = s.percent + '%';
+  document.getElementById('dashDone').textContent = `${s.done} / ${s.total}`;
+  document.getElementById('dashNiveau').textContent = 'Niveau ' + s.currentNiveau + ' — ' + AET_NIVEAUX[s.currentNiveau].titre;
+  document.getElementById('statDone').textContent = s.done;
+  document.getElementById('statPct').textContent = s.percent + '%';
+
+  const results = AET_PROGRESS.quizResults();
+  const quizOk = Object.values(results).filter(r=>r.score/r.total>=0.6).length;
+  document.getElementById('statQuiz').textContent = quizOk;
+  document.getElementById('statExo').textContent = s.done; // 1 exercice par module terminé
+
+  if(s.current){
+    document.getElementById('nextTitle').textContent = `Module ${s.current.n} — ${s.current.titre}`;
+    document.getElementById('nextObj').textContent = s.current.objectif;
+    document.getElementById('nextBtn').href = 'cours.html?m=' + s.current.n;
+    document.getElementById('nextBtn').textContent = 'Continuer la formation';
+  } else {
+    document.getElementById('nextBtn').href = 'certification.html';
+    document.getElementById('nextBtn').textContent = '🏆 Voir ma certification';
+  }
+</script>
+</body>
+</html>
