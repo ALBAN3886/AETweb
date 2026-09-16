@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paramètres — AET</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/responsive.css">
+<style>
+  .settings-grid{display:grid;grid-template-columns:200px 1fr;gap:28px;}
+  @media (max-width:760px){ .settings-grid{grid-template-columns:1fr;} }
+  .settings-menu{display:flex;flex-direction:column;gap:4px;}
+  .settings-menu a{padding:10px 14px;border-radius:8px;font-size:13.5px;color:var(--text-2);font-weight:600;}
+  .settings-menu a:hover{background:var(--surface-2);color:var(--text);}
+  .settings-menu a.on{background:var(--surface-2);color:var(--blue);}
+  .set-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);margin-bottom:20px;}
+  .set-block h3{font-size:1rem;margin-bottom:16px;}
+  .set-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1px solid var(--border);font-size:13.5px;}
+  .set-row:first-of-type{border-top:none;}
+  .switch{position:relative;width:42px;height:24px;background:var(--border);border-radius:100px;cursor:pointer;flex-shrink:0;}
+  .switch.on{background:var(--blue);}
+  .switch::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform .2s;}
+  .switch.on::after{transform:translateX(18px);}
+  .theme-row-opts{display:flex;gap:8px;}
+  .theme-row-opts button{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);font-size:12.5px;cursor:pointer;color:var(--text-2);}
+  .theme-row-opts button.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">AET</span>
+      <span class="brand-text"><b>Alban Eloh Technology</b>La technologie au service de ton avenir</span>
+    </a>
+    <nav class="site-nav" id="siteNav">
+      <a href="index.html" class="nav-link">Accueil</a>
+      <a href="formation-ia-prompting.html" class="nav-link">Formations</a>
+      <a href="programme.html" class="nav-link">Programme</a>
+      <a href="prompts.html" class="nav-link">🧠 Banque de prompts</a>
+      <a href="videos.html" class="nav-link">🎥 Vidéothèque</a>
+      <a href="quiz.html" class="nav-link">🧪 Quiz</a>
+      <a href="certification.html" class="nav-link">🏆 Certification</a>
+      <a href="dashboard.html" class="nav-link">👤 Mon espace</a>
+      <a href="parametres.html" class="nav-link">⚙️ Paramètres</a>
+      <a href="index.html#contact" class="nav-link">📞 Contact</a>
+      <div class="nav-actions">
+        <div class="theme-toggle">
+          <button type="button" data-mode="light" aria-label="Thème clair">☀️</button>
+          <button type="button" data-mode="dark" aria-label="Thème sombre">🌙</button>
+          <button type="button" data-mode="auto" aria-label="Thème automatique">⚙️</button>
+        </div>
+        <a href="formation-ia-prompting.html#inscription" class="btn btn-gold btn-sm">S'inscrire</a>
+      </div>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">⚙️ Paramètres</p>
+      <h2>Gère ton compte et tes préférences</h2>
+    </div>
+
+    <div class="settings-grid">
+      <nav class="settings-menu">
+        <a href="#profil" class="on">Profil</a>
+        <a href="#preferences">Préférences</a>
+        <a href="#notifications">Notifications</a>
+        <a href="#formation">Formation</a>
+        <a href="#compte">Compte</a>
+      </nav>
+
+      <div>
+        <div class="set-block" id="profil">
+          <h3>👤 Profil</h3>
+          <div class="field"><label for="pNom">Nom</label><input type="text" id="pNom" placeholder="Ton nom complet"></div>
+          <div class="row-2">
+            <div class="field"><label for="pEmail">Email</label><input type="email" id="pEmail" placeholder="ton@email.com"></div>
+            <div class="field"><label for="pTel">Téléphone</label><input type="tel" id="pTel" placeholder="+228 ..."></div>
+          </div>
+          <button class="btn btn-blue btn-sm" id="saveProfile">Enregistrer le profil</button>
+          <p class="muted mt-8" style="font-size:12px;">Utilisé pour personnaliser ton tableau de bord et ton certificat. Stocké uniquement sur cet appareil.</p>
+        </div>
+
+        <div class="set-block" id="preferences">
+          <h3>🎨 Préférences</h3>
+          <div class="set-row">
+            <span>Thème</span>
+            <div class="theme-row-opts" id="themeOpts">
+              <button data-mode="light">☀️ Clair</button>
+              <button data-mode="dark">🌙 Sombre</button>
+              <button data-mode="auto">⚙️ Auto</button>
+            </div>
+          </div>
+          <div class="set-row">
+            <span>Taille du texte</span>
+            <div class="theme-row-opts" id="fontOpts">
+              <button data-size="14">A-</button>
+              <button data-size="16">A</button>
+              <button data-size="18">A+</button>
+            </div>
+          </div>
+          <div class="set-row">
+            <span>Langue</span>
+            <span class="badge badge-muted">Français</span>
+          </div>
+        </div>
+
+        <div class="set-block" id="notifications">
+          <h3>🔔 Notifications</h3>
+          <div class="set-row"><span>Notifications de cours</span><div class="switch on" data-key="notifCours"></div></div>
+          <div class="set-row"><span>Rappels de progression</span><div class="switch on" data-key="notifRappels"></div></div>
+          <div class="set-row"><span>Nouveaux cours et modules</span><div class="switch" data-key="notifNouveaux"></div></div>
+          <p class="muted mt-8" style="font-size:12px;">Les notifications push seront activées avec l'application mobile AET.</p>
+        </div>
+
+        <div class="set-block" id="formation">
+          <h3>🎓 Formation</h3>
+          <div class="set-row"><span>Réinitialiser ma progression</span><button class="btn btn-line btn-sm" id="resetProgress">Réinitialiser</button></div>
+          <div class="set-row"><span>Télécharger mes ressources</span><a class="btn btn-line btn-sm" href="prompts.html">Banque de prompts</a></div>
+        </div>
+
+        <div class="set-block" id="compte">
+          <h3>🔐 Compte</h3>
+          <div class="set-row"><span>Sécurité</span><span class="badge badge-muted">Nécessite un compte (bientôt)</span></div>
+          <div class="set-row"><span>Déconnexion</span><button class="btn btn-line btn-sm" disabled title="Connexion pas encore activée">Se déconnecter</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand"><b>AET — Alban Eloh Technology</b>« Apprendre aujourd'hui, réussir demain ! »</div>
+    <div class="footer-links">
+      <a href="dashboard.html">Mon espace</a>
+      <a href="mailto:albaneloh686@gmail.com">albaneloh686@gmail.com</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/progress.js"></script>
+<script src="js/app.js"></script>
+<script>
+  // Profil
+  let profile = {};
+  try{ profile = JSON.parse(localStorage.getItem('aet_profile')||'{}'); }catch(e){}
+  document.getElementById('pNom').value = profile.nom || '';
+  document.getElementById('pEmail').value = profile.email || '';
+  document.getElementById('pTel').value = profile.tel || '';
+  document.getElementById('saveProfile').addEventListener('click', ()=>{
+    const data = {
+      nom: document.getElementById('pNom').value.trim(),
+      email: document.getElementById('pEmail').value.trim(),
+      tel: document.getElementById('pTel').value.trim(),
+    };
+    localStorage.setItem('aet_profile', JSON.stringify(data));
+    aetToast('Profil enregistré ✓');
+  });
+
+  // Thème (miroir du sélecteur de la nav)
+  const themeOpts = document.getElementById('themeOpts');
+  function syncThemeButtons(){
+    const mode = document.documentElement.getAttribute('data-theme') || 'auto';
+    themeOpts.querySelectorAll('button').forEach(b=> b.classList.toggle('active', b.dataset.mode===mode));
+  }
+  themeOpts.querySelectorAll('button').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      document.querySelector(`.theme-toggle button[data-mode="${b.dataset.mode}"]`).click();
+      syncThemeButtons();
+    });
+  });
+  syncThemeButtons();
+
+  // Taille du texte
+  const fontOpts = document.getElementById('fontOpts');
+  let savedSize = localStorage.getItem('aet_fontsize') || '15';
+  document.body.style.fontSize = savedSize + 'px';
+  fontOpts.querySelectorAll('button').forEach(b=>{
+    if(b.dataset.size === savedSize.replace('15','16')) b.classList.add('active');
+    b.addEventListener('click', ()=>{
+      document.body.style.fontSize = b.dataset.size + 'px';
+      localStorage.setItem('aet_fontsize', b.dataset.size);
+      fontOpts.querySelectorAll('button').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+    });
+  });
+
+  // Notifications (switches, stockage local uniquement)
+  let notifPrefs = {};
+  try{ notifPrefs = JSON.parse(localStorage.getItem('aet_notifs')||'{}'); }catch(e){}
+  document.querySelectorAll('.switch').forEach(sw=>{
+    const key = sw.dataset.key;
+    if(key in notifPrefs) sw.classList.toggle('on', notifPrefs[key]);
+    sw.addEventListener('click', ()=>{
+      const on = sw.classList.toggle('on');
+      notifPrefs[key] = on;
+      localStorage.setItem('aet_notifs', JSON.stringify(notifPrefs));
+    });
+  });
+
+  // Réinitialiser la progression
+  document.getElementById('resetProgress').addEventListener('click', ()=>{
+    if(confirm('Réinitialiser toute ta progression ? Cette action est irréversible.')){
+      AET_PROGRESS.reset();
+      localStorage.removeItem('aet_quiz_results');
+      aetToast('Progression réinitialisée');
+    }
+  });
+</script>
+</body>
+</html>

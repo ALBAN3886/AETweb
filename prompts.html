@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banque de prompts — AET</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/courses.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">AET</span>
+      <span class="brand-text"><b>Alban Eloh Technology</b>La technologie au service de ton avenir</span>
+    </a>
+    <nav class="site-nav" id="siteNav">
+      <a href="index.html" class="nav-link">Accueil</a>
+      <a href="formation-ia-prompting.html" class="nav-link">Formations</a>
+      <a href="programme.html" class="nav-link">Programme</a>
+      <a href="prompts.html" class="nav-link">🧠 Banque de prompts</a>
+      <a href="videos.html" class="nav-link">🎥 Vidéothèque</a>
+      <a href="quiz.html" class="nav-link">🧪 Quiz</a>
+      <a href="certification.html" class="nav-link">🏆 Certification</a>
+      <a href="dashboard.html" class="nav-link">👤 Mon espace</a>
+      <a href="parametres.html" class="nav-link">⚙️ Paramètres</a>
+      <a href="index.html#contact" class="nav-link">📞 Contact</a>
+      <div class="nav-actions">
+        <div class="theme-toggle">
+          <button type="button" data-mode="light" aria-label="Thème clair">☀️</button>
+          <button type="button" data-mode="dark" aria-label="Thème sombre">🌙</button>
+          <button type="button" data-mode="auto" aria-label="Thème automatique">⚙️</button>
+        </div>
+        <a href="formation-ia-prompting.html#inscription" class="btn btn-gold btn-sm">S'inscrire</a>
+      </div>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">🧠 Banque de prompts AET</p>
+      <h2>Des prompts prêts à personnaliser</h2>
+      <p>Copie, remplace les champs entre crochets, et utilise-les directement avec ton assistant IA préféré.</p>
+    </div>
+
+    <div class="prompt-toolbar">
+      <input class="prompt-search" id="search" type="text" placeholder="🔎 Rechercher un prompt...">
+    </div>
+    <div class="cat-pills" id="cats"></div>
+
+    <div class="prompt-grid mt-24" id="promptGrid"></div>
+    <p class="muted center mt-24 hidden" id="emptyState">Aucun prompt ne correspond à ta recherche.</p>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand"><b>AET — Alban Eloh Technology</b>« Apprendre aujourd'hui, réussir demain ! »</div>
+    <div class="footer-links">
+      <a href="programme.html">Programme</a>
+      <a href="videos.html">Vidéothèque</a>
+      <a href="mailto:albaneloh686@gmail.com">albaneloh686@gmail.com</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+  const catsEl = document.getElementById('cats');
+  const gridEl = document.getElementById('promptGrid');
+  const searchEl = document.getElementById('search');
+  const emptyEl = document.getElementById('emptyState');
+  let activeCat = 'Tous';
+
+  const categories = ['Tous', ...Array.from(new Set(AET_PROMPTS.map(p=>p.cat)))];
+  categories.forEach(cat=>{
+    const pill = document.createElement('button');
+    pill.className = 'pill' + (cat==='Tous'?' on':'');
+    pill.textContent = cat;
+    pill.addEventListener('click', ()=>{
+      activeCat = cat;
+      document.querySelectorAll('.pill').forEach(p=>p.classList.toggle('on', p.textContent===cat));
+      render();
+    });
+    catsEl.appendChild(pill);
+  });
+
+  function render(){
+    const q = searchEl.value.trim().toLowerCase();
+    const filtered = AET_PROMPTS.filter(p=>{
+      const matchCat = activeCat==='Tous' || p.cat===activeCat;
+      const matchQ = !q || p.titre.toLowerCase().includes(q) || p.prompt.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q);
+      return matchCat && matchQ;
+    });
+    gridEl.innerHTML = filtered.map((p,i)=>`
+      <div class="prompt-card">
+        <span class="badge badge-blue">${p.cat}</span>
+        <h3 class="mt-8">${p.titre}</h3>
+        <p class="desc">${p.desc}</p>
+        <div class="prompt-box">${p.prompt}</div>
+        <button class="btn btn-blue btn-sm" data-i="${i}">Copier le prompt</button>
+      </div>
+    `).join('');
+    gridEl.querySelectorAll('button[data-i]').forEach(btn=>{
+      btn.addEventListener('click', ()=> aetCopy(filtered[btn.dataset.i].prompt, 'Prompt copié ✓'));
+    });
+    emptyEl.classList.toggle('hidden', filtered.length>0);
+  }
+  searchEl.addEventListener('input', render);
+  render();
+</script>
+</body>
+</html>
