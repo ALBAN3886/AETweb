@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz — AET</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/courses.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">AET</span>
+      <span class="brand-text"><b>Alban Eloh Technology</b>La technologie au service de ton avenir</span>
+    </a>
+    <nav class="site-nav" id="siteNav">
+      <a href="index.html" class="nav-link">Accueil</a>
+      <a href="formation-ia-prompting.html" class="nav-link">Formations</a>
+      <a href="programme.html" class="nav-link">Programme</a>
+      <a href="prompts.html" class="nav-link">🧠 Banque de prompts</a>
+      <a href="videos.html" class="nav-link">🎥 Vidéothèque</a>
+      <a href="quiz.html" class="nav-link">🧪 Quiz</a>
+      <a href="certification.html" class="nav-link">🏆 Certification</a>
+      <a href="dashboard.html" class="nav-link">👤 Mon espace</a>
+      <a href="parametres.html" class="nav-link">⚙️ Paramètres</a>
+      <a href="index.html#contact" class="nav-link">📞 Contact</a>
+      <div class="nav-actions">
+        <div class="theme-toggle">
+          <button type="button" data-mode="light" aria-label="Thème clair">☀️</button>
+          <button type="button" data-mode="dark" aria-label="Thème sombre">🌙</button>
+          <button type="button" data-mode="auto" aria-label="Thème automatique">⚙️</button>
+        </div>
+        <a href="formation-ia-prompting.html#inscription" class="btn btn-gold btn-sm">S'inscrire</a>
+      </div>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">🧪 Quiz AET</p>
+      <h2>Teste tes connaissances, module par module</h2>
+      <p>Chaque quiz est généré à partir du contenu du module (objectif, points à retenir, prompt). Termine le cours pour débloquer le quiz correspondant.</p>
+    </div>
+    <div class="mod-grid" id="quizList"></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand"><b>AET — Alban Eloh Technology</b>« Apprendre aujourd'hui, réussir demain ! »</div>
+    <div class="footer-links">
+      <a href="programme.html">Programme</a>
+      <a href="dashboard.html">Mon espace</a>
+      <a href="mailto:albaneloh686@gmail.com">albaneloh686@gmail.com</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/progress.js"></script>
+<script src="js/app.js"></script>
+<script>
+  const list = document.getElementById('quizList');
+  const results = AET_PROGRESS.quizResults();
+  AET_MODULES.forEach(m=>{
+    const status = AET_PROGRESS.statusOf(m.n);
+    const locked = status === 'locked';
+    const res = results[m.n];
+    const card = document.createElement('div');
+    card.className = 'mod-card' + (locked?' is-locked':'');
+    card.innerHTML = `
+      <div class="mod-card-top">
+        <span class="mod-num">MODULE ${String(m.n).padStart(2,'0')}</span>
+        ${res ? `<span class="badge badge-green">${res.score}/${res.total}</span>` : `<span class="badge badge-muted">Pas encore fait</span>`}
+      </div>
+      <h3>${m.titre}</h3>
+      <p class="mod-obj">Niveau ${m.niv} · 5 questions générées à partir du cours</p>
+      <div class="mod-card-foot">
+        <span class="muted" style="font-size:12px;">${locked?'🔒 Verrouillé':'Disponible'}</span>
+        ${locked
+          ? `<button class="btn btn-line btn-sm" disabled>Faire le quiz</button>`
+          : `<a class="btn btn-blue btn-sm" href="cours.html?m=${m.n}#quizSection">${res?'Refaire':'Faire le quiz'}</a>`}
+      </div>
+    `;
+    list.appendChild(card);
+  });
+</script>
+</body>
+</html>
