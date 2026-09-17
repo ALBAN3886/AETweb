@@ -17,6 +17,7 @@ html, body{max-width:100%;overflow-x:hidden;}
   .certificate .cert-meta{flex-direction:column;gap:12px;}
 }
 
-/* zones tactiles confortables partout */
-.tab, .pill, .nav-link, .quiz-opt, .theme-toggle button{min-height:38px;}
+/* zones tactiles confortables partout (WCAG/Apple : 44px min) */
+.tab, .pill, .nav-link, .quiz-opt, .theme-toggle button{min-height:44px;}
+.nav-close, .switch{min-width:44px;}
 button, a.btn{touch-action:manipulation;}
