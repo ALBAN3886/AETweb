@@ -26,24 +26,45 @@
   function initNav(){
     const toggle = document.getElementById('navToggle');
     const nav = document.getElementById('siteNav');
+    const closeBtn = document.getElementById('navClose');
     if(!toggle || !nav) return;
+    let lastFocused = null;
+
+    function getFocusable(){
+      return nav.querySelectorAll('a, button');
+    }
+    function trapTab(e){
+      if(e.key !== 'Tab') return;
+      const items = getFocusable();
+      if(!items.length) return;
+      const first = items[0], last = items[items.length-1];
+      if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    }
     function close(){
       nav.classList.remove('open');
       toggle.classList.remove('open');
       toggle.setAttribute('aria-expanded','false');
       document.body.classList.remove('no-scroll');
+      document.removeEventListener('keydown', trapTab);
+      if(lastFocused){ lastFocused.focus(); lastFocused = null; }
     }
     function open(){
+      lastFocused = document.activeElement;
       nav.classList.add('open');
       toggle.classList.add('open');
       toggle.setAttribute('aria-expanded','true');
       document.body.classList.add('no-scroll');
+      document.addEventListener('keydown', trapTab);
+      const items = getFocusable();
+      if(items.length) items[0].focus();
     }
     toggle.addEventListener('click', ()=>{
       nav.classList.contains('open') ? close() : open();
     });
+    if(closeBtn) closeBtn.addEventListener('click', close);
     nav.querySelectorAll('a').forEach(a=> a.addEventListener('click', close));
-    document.addEventListener('keydown', e=>{ if(e.key === 'Escape') close(); });
+    document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && nav.classList.contains('open')) close(); });
   }
 
   // ---------- ACTIVE NAV LINK ----------
